@@ -129,9 +129,6 @@ with st.sidebar:
     if st.button("🧩 Game: Sắp xếp từ"):
         st.session_state.nav_prompt = "Cô ơi, mình chơi trò sắp xếp chữ cái từ vựng đi ạ!"
         
-    if st.button("🏫 Thử thách Lớp học"):
-        st.session_state.nav_prompt = "Cô ơi, mình chơi trò 'Cô bảo' (Simon Says) về Classroom Languages nhé!"
-        
     if st.button("🧙‍♂️ Đố vui Ngữ pháp"):
         st.session_state.nav_prompt = "Cô đố con về các động từ quá khứ bất quy tắc đi ạ!"
 
