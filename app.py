@@ -251,7 +251,7 @@ def on_sidebar_action():
 def display_message(role, content):
     if role == "user":
         # === ICON BÉ TRAI DỄ THƯƠNG (Thay đổi tại đây) ===
-        user_icon_url = "https://cdn-icons-png.flaticon.com/512/3024/3024605.png" 
+        user_icon_url = "https://cdn-icons-png.flaticon.com/512/9136/9136536.png" 
         
         # Con (User) bên PHẢI: [Tin nhắn] [Icon]
         st.markdown(f"""
