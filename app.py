@@ -166,14 +166,13 @@ with st.sidebar:
     st.title("🎮 Trung tâm học tập")
     
     # PHẦN 1: ÔN TẬP UNIT
-    unit_choice = st.selectbox(
-        "📚 Chọn bài ôn tập:",
-        ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)]
-    )
-    if unit_choice != "--- Chọn bài ---":
-        st.session_state.nav_prompt = f"Cô ơi, con muốn ôn tập kiến thức của {unit_choice} ạ!"
-
     st.write("---")
+    st.selectbox(
+        "📘 Practice by Unit",
+        ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)],
+        key="unit_selector",
+        on_change=on_sidebar_action
+    )
     
     # PHẦN 2: LUYỆN ĐỀ & TRÒ CHƠI
     st.write("🏆 Thử thách vui vẻ:")
@@ -213,19 +212,30 @@ if "nav_prompt" in st.session_state:
     prompt = st.session_state.nav_prompt
     del st.session_state.nav_prompt
 
-if prompt:
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+# Xử lý ô nhập liệu phía dưới màn hình
+if prompt := st.chat_input("Type your answer or ask something..."):
+    call_ai_now(prompt)
+    st.rerun()
 
+# --- HÀM GỌI AI TẬP TRUNG (GIÚP KHÔNG BỊ LẶP) ---
+def call_ai_now(user_input):
+    st.session_state.messages.append({"role": "user", "content": user_input})
     try:
         response = client.models.generate_content(
             model="gemini-3.1-flash-lite",
-            contents=[{"role": m["role"], "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
+            contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
             config=config
         )
-        with st.chat_message("assistant"):
-            st.markdown(response.text)
         st.session_state.messages.append({"role": "model", "content": response.text})
     except Exception as e:
-        st.error(f"Lỗi: {e}")
+        st.error(f"Cô gặp chút lỗi nhỏ: {e}")
+
+# --- CALLBACK XỬ LÝ SỰ KIỆN (CHÌA KHÓA SỬA LỖI) ---
+def on_sidebar_action():
+    if st.session_state.unit_selector != "--- Chọn bài ---":
+        unit = st.session_state.unit_selector
+        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {unit} ạ!")
+        # ĐƯA VỀ MẶC ĐỊNH NGAY LẬP TỨC ĐỂ KHÔNG BỊ KẸT
+        st.session_state.unit_selector = "--- Chọn bài ---"
+
+
