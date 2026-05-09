@@ -193,7 +193,7 @@ with st.sidebar:
         st.rerun()
 
 # --- 8. KHU VỰC TRÒ CHUYỆN CHÍNH ---
-st.title("👩‍🏫 Cô Gia Sư Tiếng Anh 5")
+st.title("👩‍🏫 Gia Sư Tiếng Anh 5")
 
 # Lời chào nếu chưa có tin nhắn
 if not st.session_state.messages:
