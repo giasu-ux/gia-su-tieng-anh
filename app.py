@@ -262,7 +262,7 @@ def display_message(role, content):
         """, unsafe_allow_html=True)
     else:
         # === ICON CÔ GIÁO HIỀN DỊU (Thay đổi tại đây) ===
-        teacher_icon_url = "https://cdn-icons-png.flaticon.com/512/3429/3429215.png"
+        teacher_icon_url = "https://cdn-icons-png.flaticon.com/512/7439/7439481.png"
         
         # Cô (Model) bên TRÁI: [Icon] [Tin nhắn]
         st.markdown(f"""
