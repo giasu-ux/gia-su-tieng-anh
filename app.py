@@ -55,7 +55,7 @@ st.markdown("""
     
     /* Nút "Bắt đầu thi HK2" màu xanh */
     div.stButton > button:first-child {
-        background-color: #A1C9F1;
+        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%)
         color: white;
         border: none;
     }
