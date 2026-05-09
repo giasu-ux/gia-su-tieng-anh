@@ -256,7 +256,22 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# --- 8 & 9. HIỂN THỊ VÀ XỬ LÝ CHAT (Gộp lại để chạy nhanh hơn) ---
+# --- 8. KHU VỰC CHÍNH ---
+# Dòng mã mới Cô đã thêm tên và emoji cho con đây:
+st.title("👩‍🏫 Gia sư tiếng Anh lớp 5")
+
+# Rồi mới đến dải banner màu tím (image_ac7bbc.png)
+st.markdown("""
+    <div class="top-banner">
+        <div>
+            <h2 style='margin:0;'>Hello! I'm your English buddy! ⭐</h2>
+            <p style='margin:0;'>Cùng học thật vui và trở thành siêu sao tiếng Anh nhé!</p>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" width="70">
+    </div>
+""", unsafe_allow_html=True)
+
+# --- 9. HIỂN THỊ VÀ XỬ LÝ CHAT (Gộp lại để chạy nhanh hơn) ---
 
 # 1. Hiển thị toàn bộ lịch sử chat cũ đã lưu
 for msg in st.session_state.messages:
