@@ -156,7 +156,12 @@ config = types.GenerateContentConfig(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- 6. THANH ĐIỀU KHIỂN BÊN TRÁI (SIDEBAR) ---
+# --- 6. HÀM XỬ LÝ KHI CHỌN UNIT (Sửa lỗi kẹt Unit) ---
+def handle_unit_change():
+    if st.session_state.unit_selector != "--- Chọn bài ---":
+        st.session_state.nav_prompt = f"Cô ơi, con muốn ôn tập kiến thức của {st.session_state.unit_selector} ạ!"
+
+# --- 7. THANH ĐIỀU KHIỂN BÊN TRÁI (SIDEBAR) ---
 with st.sidebar:
     st.title("🎮 Trung tâm học tập")
     
@@ -187,7 +192,7 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# --- 7. KHU VỰC TRÒ CHUYỆN CHÍNH ---
+# --- 8. KHU VỰC TRÒ CHUYỆN CHÍNH ---
 st.title("👩‍🏫 Cô Gia Sư Tiếng Anh 5")
 
 # Lời chào nếu chưa có tin nhắn
@@ -200,7 +205,7 @@ for msg in st.session_state.messages:
     with st.chat_message("user" if msg["role"] == "user" else "assistant"):
         st.markdown(msg["content"])
 
-# --- 8. XỬ LÝ PHẢN HỒI ---
+# --- 9. XỬ LÝ PHẢN HỒI ---
 prompt = st.chat_input("Con muốn nói gì với Cô...")
 
 # Kiểm tra nếu con bấm nút ở Sidebar
