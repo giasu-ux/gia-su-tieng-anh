@@ -168,11 +168,11 @@ with st.sidebar:
     # PHẦN 1: ÔN TẬP UNIT
     st.write("---")
     st.selectbox(
-        "📘 Practice by Unit",
-        ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)],
-        key="unit_selector",
-        on_change=on_sidebar_action
-    )
+    "📘 Practice by Unit",
+    ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)],
+    key="unit_selector",
+    on_change=on_sidebar_action # Tên này phải giống hệt tên hàm ở Bước 2
+)
     
     # PHẦN 2: LUYỆN ĐỀ & TRÒ CHƠI
     st.write("🏆 Thử thách vui vẻ:")
@@ -238,4 +238,26 @@ def on_sidebar_action():
         # ĐƯA VỀ MẶC ĐỊNH NGAY LẬP TỨC ĐỂ KHÔNG BỊ KẸT
         st.session_state.unit_selector = "--- Chọn bài ---"
 
+# --- HÀM XỬ LÝ (PHẢI NẰM TRÊN SIDEBAR) ---
 
+def call_ai_now(user_input):
+    # Thêm tin nhắn của bé vào lịch sử
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
+            config=config
+        )
+        # Lưu câu trả lời của Cô
+        st.session_state.messages.append({"role": "model", "content": response.text})
+    except Exception as e:
+        st.error(f"Cô gặp chút lỗi nhỏ: {e}")
+
+def on_sidebar_action():
+    # Kiểm tra xem bé có thực sự chọn bài không
+    if st.session_state.unit_selector != "--- Chọn bài ---":
+        selected_unit = st.session_state.unit_selector
+        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {selected_unit} ạ!")
+        # Reset thanh chọn về mặc định để không bị kẹt
+        st.session_state.unit_selector = "--- Chọn bài ---"
