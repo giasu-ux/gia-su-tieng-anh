@@ -250,18 +250,24 @@ def on_sidebar_action():
         
 def display_message(role, content):
     if role == "user":
+        # === ICON BÉ TRAI DỄ THƯƠNG (Thay đổi tại đây) ===
+        user_icon_url = "https://cdn-icons-png.flaticon.com/512/3024/3024605.png" 
+        
         # Con (User) bên PHẢI: [Tin nhắn] [Icon]
         st.markdown(f"""
             <div class="chat-row user-row">
                 <div class="chat-bubble user-bubble">{content}</div>
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" class="chat-icon">
+                <img src="{user_icon_url}" class="chat-icon">
             </div>
         """, unsafe_allow_html=True)
     else:
+        # === ICON CÔ GIÁO HIỀN DỊU (Thay đổi tại đây) ===
+        teacher_icon_url = "https://cdn-icons-png.flaticon.com/512/3429/3429215.png"
+        
         # Cô (Model) bên TRÁI: [Icon] [Tin nhắn]
         st.markdown(f"""
             <div class="chat-row ai-row">
-                <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" class="chat-icon">
+                <img src="{teacher_icon_url}" class="chat-icon">
                 <div class="chat-bubble ai-bubble">{content}</div>
             </div>
         """, unsafe_allow_html=True)
