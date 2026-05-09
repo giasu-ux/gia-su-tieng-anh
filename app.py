@@ -161,6 +161,30 @@ def handle_unit_change():
     if st.session_state.unit_selector != "--- Chọn bài ---":
         st.session_state.nav_prompt = f"Cô ơi, con muốn ôn tập kiến thức của {st.session_state.unit_selector} ạ!"
 
+# --- HÀM XỬ LÝ (PHẢI NẰM TRÊN SIDEBAR) ---
+
+def call_ai_now(user_input):
+    # Thêm tin nhắn của bé vào lịch sử
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
+            config=config
+        )
+        # Lưu câu trả lời của Cô
+        st.session_state.messages.append({"role": "model", "content": response.text})
+    except Exception as e:
+        st.error(f"Cô gặp chút lỗi nhỏ: {e}")
+
+def on_sidebar_action():
+    # Kiểm tra xem bé có thực sự chọn bài không
+    if st.session_state.unit_selector != "--- Chọn bài ---":
+        selected_unit = st.session_state.unit_selector
+        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {selected_unit} ạ!")
+        # Reset thanh chọn về mặc định để không bị kẹt
+        st.session_state.unit_selector = "--- Chọn bài ---"
+
 # --- 7. THANH ĐIỀU KHIỂN BÊN TRÁI (SIDEBAR) ---
 with st.sidebar:
     st.title("🎮 Trung tâm học tập")
@@ -236,28 +260,4 @@ def on_sidebar_action():
         unit = st.session_state.unit_selector
         call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {unit} ạ!")
         # ĐƯA VỀ MẶC ĐỊNH NGAY LẬP TỨC ĐỂ KHÔNG BỊ KẸT
-        st.session_state.unit_selector = "--- Chọn bài ---"
-
-# --- HÀM XỬ LÝ (PHẢI NẰM TRÊN SIDEBAR) ---
-
-def call_ai_now(user_input):
-    # Thêm tin nhắn của bé vào lịch sử
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    try:
-        response = client.models.generate_content(
-            model="gemini-3.1-flash-lite",
-            contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
-            config=config
-        )
-        # Lưu câu trả lời của Cô
-        st.session_state.messages.append({"role": "model", "content": response.text})
-    except Exception as e:
-        st.error(f"Cô gặp chút lỗi nhỏ: {e}")
-
-def on_sidebar_action():
-    # Kiểm tra xem bé có thực sự chọn bài không
-    if st.session_state.unit_selector != "--- Chọn bài ---":
-        selected_unit = st.session_state.unit_selector
-        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {selected_unit} ạ!")
-        # Reset thanh chọn về mặc định để không bị kẹt
         st.session_state.unit_selector = "--- Chọn bài ---"
