@@ -29,8 +29,8 @@ st.markdown("""
     .chat-container {
         display: flex;
         flex-direction: column;
-        gap: 25px; /* Tăng khoảng cách giữa các câu chat lên cho thoáng */
-        padding: 10px 0px;
+        gap: 35px; /* Tăng khoảng cách trên dưới lên 35px cho thoáng hẳn */
+        padding: 20px 0px;
         width: 100%;
     }
 
@@ -40,15 +40,14 @@ st.markdown("""
         align-items: flex-end;
     }
 
-    /* Người học bên TRÁI: Sát lề trái */
+    /* Con (Người học) - Bây giờ ở bên PHẢI */
     .user-row { 
-        justify-content: flex-start; 
+        justify-content: flex-end; 
     }
     
-    /* Cô (AI) bên PHẢI: Sát lề phải */
+    /* Cô (Gia sư) - Bây giờ ở bên TRÁI */
     .ai-row { 
-        justify-content: flex-end; 
-        flex-direction: row; /* Chỉnh lại để không bị ngược logic đẩy */
+        justify-content: flex-start; 
     }
 
     .chat-bubble {
@@ -56,27 +55,31 @@ st.markdown("""
         border-radius: 20px;
         max-width: 75%;
         font-size: 16px;
-        box-shadow: 2px 4px 12px rgba(0,0,0,0.08) !important;
+        line-height: 1.5;
+        box-shadow: 2px 4px 15px rgba(0,0,0,0.1) !important;
     }
 
+    /* Bong bóng của Con: Màu Tím Gradient */
     .user-bubble {
-        background-color: white !important;
-        color: #333 !important;
-        margin-left: 10px; /* Cách icon một xíu */
-        border-bottom-left-radius: 2px;
-    }
-
-    .ai-bubble {
         background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%) !important;
         color: white !important;
-        margin-right: 10px; /* Cách icon một xíu */
+        margin-right: 10px;
         border-bottom-right-radius: 2px;
+    }
+
+    /* Bong bóng của Cô: Màu Trắng */
+    .ai-bubble {
+        background-color: white !important;
+        color: #333 !important;
+        margin-left: 10px;
+        border-bottom-left-radius: 2px;
     }
 
     .chat-icon {
         width: 45px;
         height: 45px;
         border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     
     /* Banner màu tím phía trên */
@@ -247,19 +250,19 @@ def on_sidebar_action():
         
 def display_message(role, content):
     if role == "user":
-        # Con bên TRÁI: [Icon] [Tin nhắn]
+        # Con (User) bên PHẢI: [Tin nhắn] [Icon]
         st.markdown(f"""
             <div class="chat-row user-row">
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" class="chat-icon">
                 <div class="chat-bubble user-bubble">{content}</div>
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" class="chat-icon">
             </div>
         """, unsafe_allow_html=True)
     else:
-        # Cô bên PHẢI: [Tin nhắn] [Icon]
+        # Cô (Model) bên TRÁI: [Icon] [Tin nhắn]
         st.markdown(f"""
             <div class="chat-row ai-row">
-                <div class="chat-bubble ai-bubble">{content}</div>
                 <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" class="chat-icon">
+                <div class="chat-bubble ai-bubble">{content}</div>
             </div>
         """, unsafe_allow_html=True)
         
