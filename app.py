@@ -117,11 +117,11 @@ st.markdown("""
 
     .nut-xoa-hoi-thoai {
     /* Dải màu đỏ pastel dịu nhẹ */
-    background: linear-gradient(135deg, #ffcfcf 0%, #ff9a9a 100%);
+    background: linear-gradient(135deg, #ffcfcf 0%, #ff9a9a 100%) !important;
     
     /* Các thuộc tính bổ trợ để nút trông đẹp hơn */
-    border: none;
-    color: white;
+    border: none !important;
+    color: white !important;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -129,7 +129,8 @@ st.markdown("""
     transition: 0.3s;
     
     /* Đổ bóng nhẹ để nút có chiều sâu (tránh bị phẳng lì) */
-    box-shadow: 0 4px 15px rgba(255, 154, 154, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 154, 154, 0.3) !important;
+
 }
 
 /* Hiệu ứng khi di chuột qua */
