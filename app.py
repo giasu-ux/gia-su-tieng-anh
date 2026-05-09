@@ -229,35 +229,23 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # --- 9. XỬ LÝ PHẢN HỒI ---
-prompt = st.chat_input("Con muốn nói gì với Cô...")
 
-# Kiểm tra nếu con bấm nút ở Sidebar
-if "nav_prompt" in st.session_state:
-    prompt = st.session_state.nav_prompt
+# 1. Lấy dữ liệu từ ô chat (Cô chỉ dùng 1 khung nhập duy nhất ở đây)
+user_input = st.chat_input("Type your answer or ask something...")
+
+# 2. Kiểm tra nếu con bấm nút ở Sidebar (Sử dụng nav_prompt)
+final_prompt = None
+
+if user_input:
+    final_prompt = user_input
+elif "nav_prompt" in st.session_state:
+    final_prompt = st.session_state.nav_prompt
     del st.session_state.nav_prompt
 
-# Xử lý ô nhập liệu phía dưới màn hình
-if prompt := st.chat_input("Type your answer or ask something..."):
-    call_ai_now(prompt)
+# 3. Gửi lệnh cho Cô AI xử lý
+if final_prompt:
+    call_ai_now(final_prompt)
     st.rerun()
 
-# --- HÀM GỌI AI TẬP TRUNG (GIÚP KHÔNG BỊ LẶP) ---
-def call_ai_now(user_input):
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    try:
-        response = client.models.generate_content(
-            model="gemini-3.1-flash-lite",
-            contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
-            config=config
-        )
-        st.session_state.messages.append({"role": "model", "content": response.text})
-    except Exception as e:
-        st.error(f"Cô gặp chút lỗi nhỏ: {e}")
-
-# --- CALLBACK XỬ LÝ SỰ KIỆN (CHÌA KHÓA SỬA LỖI) ---
-def on_sidebar_action():
-    if st.session_state.unit_selector != "--- Chọn bài ---":
-        unit = st.session_state.unit_selector
-        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {unit} ạ!")
-        # ĐƯA VỀ MẶC ĐỊNH NGAY LẬP TỨC ĐỂ KHÔNG BỊ KẸT
-        st.session_state.unit_selector = "--- Chọn bài ---"
+# --- HẾT FILE ---
+# (Con nhớ xóa sạch các đoạn code lặp lại phía sau này nhé!)
