@@ -32,6 +32,53 @@ st.markdown("""
         margin-bottom: 10px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
+
+    /* Khung chứa tổng thể cho mỗi dòng chat */
+    .chat-row {
+        display: flex;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    /* Người học (Con) nằm bên TRÁI */
+    .user-row { justify-content: flex-start; }
+    
+    /* AI (Cô) nằm bên PHẢI */
+    .ai-row { justify-content: flex-row-reverse; justify-content: flex-end; }
+
+    /* Bong bóng chat chung */
+    .chat-bubble {
+        padding: 10px 15px;
+        border-radius: 20px;
+        max-width: 70%; /* Chỉ dài tối đa 70% màn hình */
+        word-wrap: break-word;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    /* Màu sắc và bo góc riêng cho Con (Bên trái) */
+    .user-bubble {
+        background-color: #FFFFFF;
+        color: #333;
+        border-bottom-left-radius: 2px;
+        margin-left: 10px;
+    }
+
+    /* Màu sắc và bo góc riêng cho Cô (Bên phải) */
+    .ai-bubble {
+        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%);
+        color: white;
+        border-bottom-right-radius: 2px;
+        margin-right: 10px;
+    }
+
+    /* Kích thước Icon */
+    .chat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     
     /* Banner màu tím phía trên */
     .top-banner {
