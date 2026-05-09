@@ -39,7 +39,7 @@ if "messages" not in st.session_state:
 
 # HIỆN LỜI CHÀO TỰ ĐỘNG NẾU CHƯA CHAT GÌ
 if len(st.session_state.messages) == 0:
-    welcome_text = "Chào con! Thầy/Cô rất vui được gặp con. Hôm nay con muốn cùng Thầy/Cô làm gì nào? Con có thể chọn các nút bên dưới hoặc tự gõ câu hỏi nhé! 👇"
+    welcome_text = "Chào con! Cô rất vui được gặp con. Hôm nay con muốn cùng Cô làm gì nào? Con có thể chọn các nút bên dưới hoặc tự gõ câu hỏi nhé! 👇"
     st.session_state.messages.append({"role": "assistant", "content": welcome_text})
 
 # Hiển thị lịch sử chat
