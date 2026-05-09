@@ -240,6 +240,23 @@ def on_sidebar_action():
         unit = st.session_state.unit_selector
         call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {unit} ạ!")
         st.session_state.unit_selector = "--- Chọn bài ---"
+def display_message(role, content):
+    if role == "user":
+        # Con bên TRÁI
+        st.markdown(f"""
+            <div class="chat-row user-row">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" class="chat-icon">
+                <div class="chat-bubble user-bubble">{content}</div>
+            </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Cô bên PHẢI
+        st.markdown(f"""
+            <div class="chat-row ai-row">
+                <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" class="chat-icon">
+                <div class="chat-bubble ai-bubble">{content}</div>
+            </div>
+        """, unsafe_allow_html=True)
         
 # --- 5. QUẢN LÝ LỊCH SỬ CHAT ---
 if "messages" not in st.session_state:
