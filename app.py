@@ -158,7 +158,37 @@ config = types.GenerateContentConfig(
         types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_LOW_AND_ABOVE"),
     ]
 )
+def call_ai_now(user_input):
+    # 1. Thêm tin nhắn của con vào bộ nhớ
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    
+    # 2. Hiển thị ngay lập tức tin nhắn của con lên màn hình
+    with st.chat_message("user", avatar="👦"):
+        st.markdown(user_input)
 
+    # 3. Tạo hiệu ứng "Cô đang suy nghĩ..."
+    with st.chat_message("assistant", avatar="🤖"):
+        with st.spinner("Cô đang suy nghĩ câu trả lời cho con nhé..."):
+            try:
+                response = client.models.generate_content(
+                    model="gemini-3.1-flash-lite",
+                    contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
+                    config=config
+                )
+                ai_text = response.text
+                st.markdown(ai_text)
+                # Lưu câu trả lời của Cô vào bộ nhớ
+                st.session_state.messages.append({"role": "model", "content": ai_text})
+            except Exception as e:
+                st.error(f"Cô gặp chút lỗi nhỏ: {e}")
+
+def on_sidebar_action():
+    # (Giữ nguyên hàm này để xử lý nút chọn Unit)
+    if st.session_state.unit_selector != "--- Chọn bài ---":
+        unit = st.session_state.unit_selector
+        call_ai_now(f"Cô ơi, con muốn ôn tập kiến thức của {unit} ạ!")
+        st.session_state.unit_selector = "--- Chọn bài ---"
+        
 # --- 5. QUẢN LÝ LỊCH SỬ CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -237,22 +267,22 @@ for msg in st.session_state.messages:
 
 # --- 9. XỬ LÝ PHẢN HỒI ---
 
-# 1. Lấy dữ liệu từ ô chat (Cô chỉ dùng 1 khung nhập duy nhất ở đây)
+# 1. Lấy dữ liệu từ ô chat
 user_input = st.chat_input("Type your answer or ask something...")
 
-# 2. Kiểm tra nếu con bấm nút ở Sidebar (Sử dụng nav_prompt)
-final_prompt = None
+# 2. Xử lý lệnh từ Sidebar (Nếu con bấm nút hoặc chọn Unit)
+if "nav_prompt" in st.session_state:
+    prompt_to_process = st.session_state.nav_prompt
+    # Xóa ngay để không bị lặp lệnh
+    del st.session_state.nav_prompt 
+    # Gọi hàm xử lý (Hàm này sẽ hiện chữ ngay và có vòng quay)
+    call_ai_now(prompt_to_process)
+    # Rerun để lưu tin nhắn vào lịch sử vĩnh viễn
+    st.rerun()
 
-if user_input:
-    final_prompt = user_input
-elif "nav_prompt" in st.session_state:
-    final_prompt = st.session_state.nav_prompt
-    del st.session_state.nav_prompt
-
-# 3. Gửi lệnh cho Cô AI xử lý
-if final_prompt:
-    call_ai_now(final_prompt)
+# 3. Xử lý khi con gõ trực tiếp vào ô chat
+elif user_input:
+    call_ai_now(user_input)
     st.rerun()
 
 # --- HẾT FILE ---
-# (Con nhớ xóa sạch các đoạn code lặp lại phía sau này nhé!)
