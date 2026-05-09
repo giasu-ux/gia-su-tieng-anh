@@ -2,10 +2,10 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# --- 1. CẤU HÌNH GIAO DIỆN ---
+# --- 1. CẤU HÌNH GIAO DIỆN (UI) ---
 st.set_page_config(page_title="Cô Gia Sư Tiếng Anh 5", page_icon="👩‍🏫", layout="wide")
 
-# CSS làm đẹp giao diện, làm khung chat mềm mại và Sidebar chuyên nghiệp
+# CSS làm đẹp giao diện: Sidebar màu xanh dịu, khung chat bo tròn thân thiện
 st.markdown("""
     <style>
     .stApp { background-color: #f8faff; }
@@ -18,100 +18,136 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. KẾT NỐI API ---
+# --- 2. KẾT NỐI API GOOGLE AI (Sử dụng mã của Studio) ---
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
-# --- 3. DỮ LIỆU VÀ CHỈ DẪN HỆ THỐNG ---
-# (Phần này con dán lại nội dung Markdown kiến thức Global Success như cũ nhé)
-noi_dung_markdown = """ # TỪ VỰNG - NGỮ PHÁP TIẾNG ANH 5 GLOBAL SUCCESS [cite: 1]
-- Bao gồm Classroom Languages [cite: 2], Unit 1-20 [cite: 45, 74, 107, 138] và Phụ lục Ngữ pháp.
-- Chi tiết Class Languages: Stand up [cite: 3], Sit down [cite: 4], Open your book[cite: 11]...
-- Chi tiết Unit 11: Past Simple với Động từ bất quy tắc (buy-bought, do-did, go-went...).
-- Chi tiết Ngữ pháp: Hiện tại đơn, Quá khứ đơn, Trạng từ chỉ tần suất.
- """
+# --- 3. KHO DỮ LIỆU KIẾN THỨC GLOBAL SUCCESS 5 ---
+# Toàn bộ nội dung con cung cấp đã được đưa vào đây
+noi_dung_nguon = """
+# TỪ VỰNG - NGỮ PHÁP TIẾNG ANH 5 GLOBAL SUCCESS
 
+## CLASSROOM LANGUAGES (Ngôn ngữ lớp học)
+- Stand up, Sit down, Come in, May I come in, Don't talk, May I ask a question, May I go out, Open/Close your book, Sorry I'm late...
+
+## UNIT 1: ALL ABOUT ME
+- Từ vựng: yourself, baseball, basketball, beautifully, countryside, dolphin, panda, sandwich, subject...
+- Ngữ pháp: Tell me about yourself (My name is..., I'm in Class..., I live in...); Favourite (What's your favourite colour? It's blue).
+
+## UNIT 2: OUR HOMES
+- Từ vựng: address, grade, building, district, flat, tower...
+- Ngữ pháp: What's your address? (It's 50 Hoa Binh Street); Where do you live? (I live at...).
+
+## UNIT 3: MY FOREIGN FRIENDS
+- Từ vựng: foreign, nationality, Australia/Australian, Japan/Japanese, friendly, helpful, active, clever...
+- Ngữ pháp: Where are you from? What nationality is she? What's he like? (He's friendly).
+
+## UNIT 4: OUR FREE TIME ACTIVITIES
+- Từ vựng: go for a walk, play the violin, surf the internet, water the flowers. Trạng từ: always, usually, often, sometimes, rarely, never.
+- Ngữ pháp: What do you like in your free time? What does he do at the weekend?
+
+## UNIT 5: MY FUTURE JOB
+- Từ vựng: firefighter, reporter, gardener, teach children, report the news, take care of.
+- Ngữ pháp: What would you like to be in the future? (I'd like to be a doctor). Why? (Because I'd like to help people).
+
+## UNIT 6 - UNIT 20: TỔNG HỢP KIẾN THỨC
+- Unit 6: Vị trí phòng học (Ground floor, first floor), Chỉ đường (Turn left/right).
+- Unit 11: Family time (Quá khứ đơn: went, ate, saw, bought, swam).
+- Unit 14: Stay healthy (How often do you...? Tần suất).
+- Unit 15: Health (What's the matter? I have a headache. You should/shouldn't...).
+- Unit 16: Seasons (How's the weather? What do you wear?).
+- Unit 17: Stories (Who are the main characters?).
+- Unit 18-19: Travel & Places (Where do you want to visit? How can I get there?).
+
+## PHỤ LỤC NGỮ PHÁP
+- Thì Hiện tại đơn (Simple Present), Trạng từ chỉ tần suất (Always, usually...).
+- Thì Quá khứ đơn (Past Simple): Quy tắc thêm -ed và Động từ bất quy tắc thông dụng.
+"""
+
+# --- 4. CHỈ DẪN HỆ THỐNG (SYSTEM INSTRUCTION) ---
 system_instruction_text = f"""
-[VAI TRÒ] Cô Gia sư Tiếng Anh (Xưng Cô - gọi Con).
-[NGUYÊN TẮC] Socratic Method (Gợi mở), không đưa đáp án ngay.
-[KIẾN THỨC] CHỈ dùng Global Success Lớp 5. KHÔNG dùng kiến thức nâng cao.
-[BÀI THI] Hỏi từng câu một, đợi con trả lời mới đưa câu tiếp theo.
-[DỮ LIỆU] {noi_dung_markdown}
+[VAI TRÒ]
+Bạn là Cô Gia sư Tiếng Anh ảo. Xưng là "Cô", gọi người dùng là "Con".
+
+[NGUYÊN TẮC HOẠT ĐỘNG TỐI THƯỢNG]
+- Áp dụng phương pháp SOCRATIC: Không đưa đáp án trực tiếp. Khích lệ -> Khoanh vùng lỗi -> Đặt câu hỏi gợi ý.
+- Chỉ sử dụng kiến thức trong [DỮ LIỆU CHUẨN]. KHÔNG dạy kiến thức nâng cao lớp trên.
+
+[CHẾ ĐỘ KIỂM TRA & TRÒ CHƠI]
+- Bài thi HK2: Đưa ra TỪNG CÂU HỎI MỘT, đợi con trả lời xong mới nhận xét và đưa câu tiếp theo.
+- Trò chơi Sắp xếp từ: Lấy 1 từ trong dữ liệu, xáo trộn chữ cái (VD: dolphin -> lhopdni) và đố con.
+- Simon Says: Dùng Classroom Languages để ra lệnh cho con.
+
+[DỮ LIỆU CHUẨN]
+{noi_dung_nguon}
 """
 
 config = types.GenerateContentConfig(
     thinking_config=types.ThinkingConfig(thinking_level="MINIMAL"),
     system_instruction=system_instruction_text,
-    temperature=0.3
+    temperature=0.2, # Giúp cô tập trung, bớt nói leo kiến thức ngoài
+    safety_settings=[
+        types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_LOW_AND_ABOVE"),
+    ]
 )
 
-# --- 4. QUẢN LÝ LỊCH SỬ CHAT ---
+# --- 5. QUẢN LÝ LỊCH SỬ CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- 5. THANH ĐIỀU KHIỂN BÊN TRÁI (SIDEBAR) ---
+# --- 6. THANH ĐIỀU KHIỂN BÊN TRÁI (SIDEBAR) ---
 with st.sidebar:
     st.title("🎮 Trung tâm học tập")
-    st.write("Con chọn bài học ở đây nhé!")
     
-    # 1. Chọn Unit
+    # PHẦN 1: ÔN TẬP UNIT
     unit_choice = st.selectbox(
-        "📚 Ôn tập theo Unit:",
-        ["--- Chọn bài ---", "Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", 
-         "Unit 6", "Unit 7", "Unit 8", "Unit 9", "Unit 10", "Unit 11", "Unit 12",
-         "Unit 13", "Unit 14", "Unit 15", "Unit 16", "Unit 17", "Unit 18", "Unit 19", "Unit 20"]
+        "📚 Chọn bài ôn tập:",
+        ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)]
     )
     if unit_choice != "--- Chọn bài ---":
         st.session_state.nav_prompt = f"Cô ơi, con muốn ôn tập kiến thức của {unit_choice} ạ!"
 
     st.write("---")
     
-    # 2. Nút làm đề thi
-    st.write("🏆 Kiểm tra kiến thức:")
-    if st.button("🚀 Bắt đầu thi HK2"):
-        st.session_state.nav_prompt = (
-            "Cô ơi, con muốn làm một bài kiểm tra Học kỳ 2 để ôn tập. "
-            "Cô hãy đưa ra từng câu hỏi một (trộn cả từ vựng và ngữ pháp), "
-            "đợi con trả lời xong mới đưa câu tiếp theo nhé!"
-        )
-    with st.sidebar:
-    st.title("🎮 Trung tâm giải trí")
+    # PHẦN 2: LUYỆN ĐỀ & TRÒ CHƠI
+    st.write("🏆 Thử thách vui vẻ:")
     
-    # 3. Nút chơi game từ vựng
-    if st.button("🧩 Game: Sắp xếp từ"):
-        st.session_state.nav_prompt = (
-            "Cô ơi, mình chơi trò sắp xếp chữ cái nhé! "
-            "Cô hãy chọn 1 từ vựng trong Unit 1-20, xáo trộn các chữ cái lại và đố con đó là từ gì nha!"
-        )
-
-    # 4. Nút đố vui ngữ pháp
-    if st.button("🧙‍♂️ Đố vui Ngữ pháp"):
-        st.session_state.nav_prompt = (
-            "Cô ơi, con muốn thử thách với Phù thủy ngữ pháp! "
-            "Cô hãy đố con về thì Quá khứ đơn hoặc các Động từ bất quy tắc trong Unit 11 nhé!"
-        )
+    if st.button("🚀 Bắt đầu thi HK2"):
+        st.session_state.nav_prompt = "Cô ơi, ra bài thi HK2 từng câu một cho con làm nhé!"
         
+    if st.button("🧩 Game: Sắp xếp từ"):
+        st.session_state.nav_prompt = "Cô ơi, mình chơi trò sắp xếp chữ cái từ vựng đi ạ!"
+        
+    if st.button("🏫 Thử thách Lớp học"):
+        st.session_state.nav_prompt = "Cô ơi, mình chơi trò 'Cô bảo' (Simon Says) về Classroom Languages nhé!"
+        
+    if st.button("🧙‍♂️ Đố vui Ngữ pháp"):
+        st.session_state.nav_prompt = "Cô đố con về các động từ quá khứ bất quy tắc đi ạ!"
+
     st.write("---")
-    if st.button("🗑️ Xóa lịch sử chat"):
+    if st.button("🗑️ Xóa hội thoại cũ"):
         st.session_state.messages = []
         st.rerun()
 
-# --- 6. KHU VỰC TRÒ CHUYỆN CHÍNH (MAIN AREA) ---
+# --- 7. KHU VỰC TRÒ CHUYỆN CHÍNH ---
 st.title("👩‍🏫 Cô Gia Sư Tiếng Anh 5")
 
-# Lời chào đầu tiên nếu chưa có tin nhắn
+# Lời chào nếu chưa có tin nhắn
 if not st.session_state.messages:
     with st.chat_message("assistant"):
-        st.markdown("Chào con yêu! Cô đã sẵn sàng rồi. Con hãy chọn bài học ở bên trái hoặc gõ câu hỏi cho Cô nhé! ✨")
+        st.markdown("Chào con yêu! Cô đã sẵn sàng đồng hành cùng con rồi. Con hãy chọn một hoạt động thú vị ở thanh bên trái để mình bắt đầu nhé! ✨")
 
-# Hiển thị lịch sử chat sạch sẽ
+# Hiển thị lịch sử chat
 for msg in st.session_state.messages:
     with st.chat_message("user" if msg["role"] == "user" else "assistant"):
         st.markdown(msg["content"])
 
-# --- 7. XỬ LÝ PHẢN HỒI ---
-prompt = st.chat_input("Con gõ câu trả lời hoặc thắc mắc vào đây...")
+# --- 8. XỬ LÝ PHẢN HỒI ---
+prompt = st.chat_input("Con muốn nói gì với Cô...")
 
-# Kiểm tra lệnh từ Sidebar
+# Kiểm tra nếu con bấm nút ở Sidebar
 if "nav_prompt" in st.session_state:
     prompt = st.session_state.nav_prompt
     del st.session_state.nav_prompt
