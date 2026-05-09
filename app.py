@@ -321,11 +321,10 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# --- 8. KHU VỰC CHÍNH ---
-# Dòng mã mới Cô đã thêm tên và emoji cho con đây:
+# --- 8. KHU VỰC CHÍNH (Tiêu đề & Banner) ---
 st.title("👩‍🏫 Gia sư tiếng Anh lớp 5")
 
-# Rồi mới đến dải banner màu tím (image_ac7bbc.png)
+# Giữ nguyên dải banner màu tím rực rỡ của con
 st.markdown("""
     <div class="top-banner">
         <div>
@@ -336,17 +335,18 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 9. HIỂN THỊ VÀ XỬ LÝ CHAT (Gộp lại để chạy nhanh hơn) ---
+# --- 9. HIỂN THỊ VÀ XỬ LÝ CHAT ---
 
-# 1. Hiển thị toàn bộ lịch sử chat cũ đã lưu
+# 1. Hiển thị lịch sử chat bằng giao diện bong bóng mới (Trái-Phải)
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"], avatar="🤖" if msg["role"] == "model" else "👦"):
-        st.markdown(msg["content"])
+    display_message(msg["role"], msg["content"])
+st.markdown('</div>', unsafe_allow_html=True)
 
-# 2. Ô nhập liệu duy nhất (CHỈ DÙNG 1 CÁI NÀY)
+# 2. Ô nhập liệu duy nhất
 user_input = st.chat_input("Con gõ câu trả lời hoặc thắc mắc vào đây nhé...")
 
-# 3. Biến tạm để kiểm tra lệnh từ nút bấm hoặc ô chat
+# 3. Kiểm tra lệnh từ nút bấm Sidebar hoặc ô Chat (Giữ chức năng nav_prompt)
 final_prompt = None
 
 if "nav_prompt" in st.session_state:
@@ -355,30 +355,28 @@ if "nav_prompt" in st.session_state:
 elif user_input:
     final_prompt = user_input
 
-# 4. Nếu có tin nhắn mới -> Xử lý ngay
+# 4. Xử lý khi có tin nhắn mới
 if final_prompt:
-    # HIỆN TIN NHẮN CỦA CON LÊN NGAY LẬP TỨC
-    with st.chat_message("user", avatar="👦"):
-        st.markdown(final_prompt)
-    
-    # THÊM VÀO BỘ NHỚ
+    # Hiện tin nhắn của con ngay lập tức bằng giao diện mới (Bên TRÁI)
+    display_message("user", final_prompt)
     st.session_state.messages.append({"role": "user", "content": final_prompt})
     
-    # GỌI CÔ AI PHẢN HỒI KÈM BIỂU TƯỢNG CHỜ
-    with st.chat_message("assistant", avatar="🤖"):
-        with st.spinner("Cô đang chuẩn bị bài cho con, chờ Cô 1 xíu nhé... ✨"):
-            try:
-                response = client.models.generate_content(
-                    model="gemini-3.1-flash-lite",
-                    contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
-                    config=config
-                )
-                ai_reply = response.text
-                st.markdown(ai_reply)
-                # Lưu vào bộ nhớ
-                st.session_state.messages.append({"role": "model", "content": ai_reply})
-            except Exception as e:
-                st.error(f"Lỗi rồi con ơi: {e}")
-    
-    # Cập nhật lại giao diện để cố định tin nhắn
-    st.rerun()
+    # Cô AI phản hồi kèm vòng quay chờ đợi
+    with st.spinner("Cô đang chuẩn bị bài cho con, chờ Cô 1 xíu nhé... ✨"):
+        try:
+            response = client.models.generate_content(
+                model="gemini-3.1-flash-lite",
+                contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
+                config=config
+            )
+            ai_reply = response.text
+            # Hiện câu trả lời của Cô (Bên PHẢI)
+            display_message("model", ai_reply)
+            # Lưu vào bộ nhớ
+            st.session_state.messages.append({"role": "model", "content": ai_reply})
+            
+            # Lưu xong thì Rerun để chốt vị trí bong bóng chat
+            st.rerun()
+            
+        except Exception as e:
+            st.error(f"Lỗi rồi con ơi: {e}")
