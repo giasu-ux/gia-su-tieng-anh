@@ -53,9 +53,9 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
-    /* Nút "Bắt đầu thi HK2" màu đỏ hồng */
+    /* Nút "Bắt đầu thi HK2" màu xanh */
     div.stButton > button:first-child {
-        background-color: #AEC6CF;
+        background-color: #B8E1FF;
         color: white;
         border: none;
     }
