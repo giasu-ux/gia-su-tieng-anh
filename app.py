@@ -2,19 +2,69 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# --- 1. CẤU HÌNH GIAO DIỆN (UI) ---
-st.set_page_config(page_title="Cô Gia Sư Tiếng Anh 5", page_icon="👩‍🏫", layout="wide")
+# --- 1. CẤU HÌNH GIAO DIỆN NÂNG CAO ---
+st.set_page_config(page_title="English For Kids!", page_icon="🐱", layout="wide")
 
-# CSS làm đẹp giao diện: Sidebar màu xanh dịu, khung chat bo tròn thân thiện
+# CSS để giả lập giao diện chuyên nghiệp như ảnh thiết kế
 st.markdown("""
     <style>
-    .stApp { background-color: #f8faff; }
-    [data-testid="stSidebar"] { background-color: #e3f2fd; border-right: 2px solid #008CBA; }
-    .stChatMessage { border-radius: 15px; margin-bottom: 10px; }
-    div.stButton > button:first-child {
-        background-color: #ff4b4b; color: white; border-radius: 20px; width: 100%; font-weight: bold;
+    /* Tổng thể ứng dụng */
+    .stApp {
+        background-color: #F8FAFF;
     }
-    header {visibility: hidden;}
+    
+    /* Thanh bên trái (Sidebar) */
+    [data-testid="stSidebar"] {
+        background-color: #EBF4FF;
+        border-right: 1px solid #D1E9FF;
+    }
+    
+    /* Mascot và Logo ở Sidebar */
+    .sidebar-header {
+        text-align: center;
+        padding: 20px 0;
+    }
+    
+    /* Bong bóng chat */
+    .stChatMessage {
+        border-radius: 20px;
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    /* Banner màu tím phía trên */
+    .top-banner {
+        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Tùy chỉnh nút bấm */
+    div.stButton > button {
+        border-radius: 12px;
+        height: 3em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    /* Nút "Bắt đầu thi HK2" màu đỏ hồng */
+    div.stButton > button:first-child {
+        background-color: #FF5C5C;
+        color: white;
+        border: none;
+    }
+
+    /* Khung nhập liệu ở dưới */
+    [data-testid="stChatInput"] {
+        border-radius: 30px;
+        border: 2px solid #E0E7FF;
+    }
     </style>
 """, unsafe_allow_html=True)
 
