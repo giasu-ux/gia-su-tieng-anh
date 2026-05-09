@@ -25,51 +25,54 @@ st.markdown("""
         padding: 20px 0;
     }
 
-    /* Khung chứa tổng thể cho mỗi dòng chat */
+   /* Khung chứa dòng chat */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+    }
+
     .chat-row {
         display: flex;
-        margin-bottom: 15px;
         width: 100%;
+        align-items: flex-end; /* Icon nằm dưới cùng của bong bóng */
     }
-    
-    /* Người học (Con) nằm bên TRÁI */
-    .user-row { justify-content: flex-start; }
-    
-    /* AI (Cô) nằm bên PHẢI */
-    .ai-row { justify-content: flex-row-reverse; justify-content: flex-end; }
 
-    /* Bong bóng chat chung */
+    /* Người học bên TRÁI */
+    .user-row { justify-content: flex-start; flex-direction: row; }
+    
+    /* AI bên PHẢI */
+    .ai-row { justify-content: flex-end; flex-direction: row-reverse; }
+
     .chat-bubble {
-        padding: 10px 15px;
+        padding: 12px 18px;
         border-radius: 20px;
-        max-width: 70%; /* Chỉ dài tối đa 70% màn hình */
-        word-wrap: break-word;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        position: relative;
+        max-width: 70%;
+        font-size: 16px;
+        line-height: 1.5;
+        box-shadow: 2px 4px 12px rgba(0,0,0,0.1) !important; /* Đổ bóng đậm hơn */
     }
 
-    /* Màu sắc và bo góc riêng cho Con (Bên trái) */
     .user-bubble {
-        background-color: #FFFFFF;
-        color: #333;
-        border-bottom-left-radius: 2px;
+        background-color: white !important;
+        color: #333 !important;
         margin-left: 10px;
+        border-bottom-left-radius: 2px;
     }
 
-    /* Màu sắc và bo góc riêng cho Cô (Bên phải) */
     .ai-bubble {
-        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%);
-        color: white;
-        border-bottom-right-radius: 2px;
+        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%) !important;
+        color: white !important;
         margin-right: 10px;
+        border-bottom-right-radius: 2px;
     }
 
-    /* Kích thước Icon */
     .chat-icon {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        object-fit: cover;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     
     /* Banner màu tím phía trên */
