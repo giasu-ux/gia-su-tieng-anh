@@ -73,7 +73,23 @@ with st.sidebar:
             "Cô hãy đưa ra từng câu hỏi một (trộn cả từ vựng và ngữ pháp), "
             "đợi con trả lời xong mới đưa câu tiếp theo nhé!"
         )
+    with st.sidebar:
+    st.title("🎮 Trung tâm giải trí")
     
+    # 3. Nút chơi game từ vựng
+    if st.button("🧩 Game: Sắp xếp từ"):
+        st.session_state.nav_prompt = (
+            "Cô ơi, mình chơi trò sắp xếp chữ cái nhé! "
+            "Cô hãy chọn 1 từ vựng trong Unit 1-20, xáo trộn các chữ cái lại và đố con đó là từ gì nha!"
+        )
+
+    # 4. Nút đố vui ngữ pháp
+    if st.button("🧙‍♂️ Đố vui Ngữ pháp"):
+        st.session_state.nav_prompt = (
+            "Cô ơi, con muốn thử thách với Phù thủy ngữ pháp! "
+            "Cô hãy đố con về thì Quá khứ đơn hoặc các Động từ bất quy tắc trong Unit 11 nhé!"
+        )
+        
     st.write("---")
     if st.button("🗑️ Xóa lịch sử chat"):
         st.session_state.messages = []
