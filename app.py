@@ -14,7 +14,7 @@ st.markdown("""
         width: 100%;
     }
     </style>
-""", unsafe_allow_contents=True)
+""", unsafe_allow_html=True)
 
 st.title("🌟 Gia Sư Tiếng Anh Lớp 5")
 st.subheader("Chào mừng con đến với lớp học vui vẻ! ✨")
