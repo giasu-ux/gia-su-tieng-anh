@@ -53,11 +53,17 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
-    /* Nút "Bắt đầu thi HK2" màu xanh */
+    /* Nút "Bắt đầu thi HK2" màu tím */
     div.stButton > button:first-child {
-        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%)
+        background: linear-gradient(90deg, #A78BFA 0%, #8B5CF6 100%);
         color: white;
         border: none;
+        border-radius: 12px;
+        height: 3em;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1)
     }
 
     /* Khung nhập liệu ở dưới */
