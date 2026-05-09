@@ -9,21 +9,20 @@ st.title("📚 Gia Sư Tiếng Anh Lớp 5")
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 except:
-    st.error("Chưa tìm thấy API Key! Bạn nhớ gài vào phần Advanced Settings > Secrets nhé.")
+    st.error("Chưa tìm thấy API Key trong Secrets!")
 
-# --- PHẦN NÀY DÁN NỘI DUNG ---
-# Lưu ý: Giữ nguyên 3 dấu nháy kép ở đầu và cuối
-noi_dung_huong_dan = """
-[BẠN DÁN TOÀN BỘ QUY TẮC VÀ KIẾN THỨC MÀU XANH TRONG FILE MARKDOWN VÀO ĐÂY]
+# --- DÁN NỘI DUNG MARKDOWN VÀO ĐÂY ---
+huong_dan_he_thong = """
+[DÁN QUY TẮC VÀ KIẾN THỨC CỦA BẠN VÀO GIỮA HAI CỤM DẤU NHÁY KÉP NÀY]
 """
 
-# Khởi tạo model
+# Khởi tạo mô hình - ĐÃ CẬP NHẬT TÊN MÔ HÌNH CHUẨN
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    system_instruction=noi_dung_huong_dan
+    model_name="gemini-3.1-flash-lite",
+    system_instruction=huong_dan_he_thong
 )
 
-# Xử lý chat
+# Quản lý tin nhắn
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -36,11 +35,16 @@ if prompt := st.chat_input("Con muốn hỏi gì nào?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    try:
+        # Bắt đầu phiên chat với lịch sử
         chat = model.start_chat(history=[
-            {"role": m["role"], "parts": [m["content"]]} 
+            {"role": "user" if m["role"] == "user" else "model", "parts": [m["content"]]} 
             for m in st.session_state.messages[:-1]
         ])
         response = chat.send_message(prompt)
-        st.markdown(response.text)
+        
+        with st.chat_message("assistant"):
+            st.markdown(response.text)
         st.session_state.messages.append({"role": "assistant", "content": response.text})
+    except Exception as e:
+        st.error(f"Đã có lỗi xảy ra: {e}")
