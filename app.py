@@ -1,90 +1,63 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # --- CẤU HÌNH GIAO DIỆN ---
-st.set_page_config(page_title="Cô Gia Sư Tiếng Anh Lớp 5", page_icon="👩‍🏫", layout="centered")
-
-# CSS làm giao diện thân thiện với trẻ em
-st.markdown("""
-    <style>
-    .stApp { background-color: #f0f8ff; }
-    div.stButton > button:first-child {
-        background-color: #ff4b4b; color: white; border-radius: 20px;
-    }
-    .stSelectbox label { color: #008CBA; font-weight: bold; }
-    </style>
-""", unsafe_allow_html=True)
-
+st.set_page_config(page_title="Cô Gia Sư Tiếng Anh Lớp 5", page_icon="👩‍🏫")
 st.title("👩‍🏫 Cô Gia Sư Tiếng Anh 5")
-st.subheader("Chào con yêu! Hôm nay mình cùng học thật vui nhé! ✨")
 
-# --- KẾT NỐI AI ---
-try:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-except:
-    st.error("Lỗi: Cô chưa tìm thấy API Key trong mục Secrets!")
+# --- KẾT NỐI API ---
+# Lấy API Key từ Secrets của Streamlit
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
-# NỘI DUNG MARKDOWN (Nhớ dán toàn bộ dữ liệu Global Success của bạn vào đây)
-huong_dan_he_thong = """ [DÁN NỘI DUNG MARKDOWN CỦA BẠN VÀO ĐÂY] """
+# --- CHUẨN BỊ NỘI DUNG HỆ THỐNG ---
+# Ở đây, bạn dán thêm toàn bộ nội dung file Markdown kiến thức vào sau phần vai trò
+noi_dung_markdown = """ [DÁN NỘI DUNG TỪ VỰNG/NGỮ PHÁP CỦA BẠN VÀO ĐÂY] """
 
-model = genai.GenerativeModel(
-    model_name="gemini-3.1-flash-lite",
-    system_instruction=huong_dan_he_thong
+# Cấu hình giống hệt mã bạn lấy từ Studio
+generate_content_config = types.GenerateContentConfig(
+    thinking_config=types.ThinkingConfig(thinking_level="MINIMAL"), # Theo mã bạn gửi
+    safety_settings=[
+        types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="BLOCK_LOW_AND_ABOVE"),
+        types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_LOW_AND_ABOVE"),
+    ], # Theo mã bạn gửi
+    system_instruction= f"""[VAI TRÒ CỦA BẠN]
+Bạn là một Gia sư Tiếng Anh ảo xuất sắc... (Dán toàn bộ phần hướng dẫn của bạn ở đây)
+
+[DỮ LIỆU CHUẨN]
+{noi_dung_markdown}""" # Theo mã bạn gửi
 )
 
-# --- QUẢN LÝ TIN NHẮN ---
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# --- QUẢN LÝ LỊCH SỬ CHAT ---
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-# Lời chào đầu tiên từ Cô
-if len(st.session_state.messages) == 0:
-    welcome = "Chào con! Cô rất vui được đồng hành cùng con. Con muốn Cô hướng dẫn ôn tập Unit nào hay muốn thử sức làm đề thi học kỳ 2 nhỉ? Con chọn ở dưới nhé! 👇"
-    st.session_state.messages.append({"role": "assistant", "content": welcome})
+# Hiển thị tin nhắn cũ
+for message in st.session_state.chat_history:
+    with st.chat_message("user" if message['role'] == "user" else "assistant"):
+        st.markdown(message['content'])
 
-# Hiển thị lịch sử chat
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# --- KHU VỰC ĐIỀU KHIỂN TỰ CHỌN (DROPDOWN) ---
-st.write("---")
-col1, col2 = st.columns([2, 1])
-
-with col1:
-    # Cho bé tự chọn Unit muốn học
-    unit_choice = st.selectbox(
-        "📚 Con muốn ôn tập bài nào?",
-        ["--- Chọn Unit ---", "Unit 11", "Unit 12", "Unit 13", "Unit 14", "Unit 15", 
-         "Unit 16", "Unit 17", "Unit 18", "Unit 19", "Unit 20"]
-    )
-    if unit_choice != "--- Chọn Unit ---":
-        st.session_state.clicked_prompt = f"Cô ơi, giúp con ôn tập kiến thức của {unit_choice} nhé!"
-
-with col2:
-    # Nút làm đề thi vẫn giữ để bé luyện tập
-    if st.button("🏆 Làm đề HK2"):
-        st.session_state.clicked_prompt = "Cô ơi, ra đề thi thử Học kỳ 2 cho con làm nhé!"
-
-# --- XỬ LÝ PHẢN HỒI ---
-prompt = st.chat_input("Con gõ câu hỏi hoặc câu trả lời ở đây...")
-
-if "clicked_prompt" in st.session_state:
-    prompt = st.session_state.clicked_prompt
-    del st.session_state.clicked_prompt
-
-if prompt:
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# --- XỬ LÝ NHẬP LIỆU ---
+if prompt := st.chat_input("Con muốn hỏi Cô gì nào?"):
+    # Hiển thị tin nhắn của bé
     with st.chat_message("user"):
         st.markdown(prompt)
+    
+    # Gửi lệnh cho AI (Sử dụng cấu hình từ Studio)
+    # Chúng ta gửi toàn bộ lịch sử để AI không quên "Cô - Con"
+    response = client.models.generate_content(
+        model="gemini-3.1-flash-lite", # Theo mã bạn gửi
+        contents=[{"role": "user", "parts": [{"text": m["content"]}]} for m in st.session_state.chat_history] + 
+                 [{"role": "user", "parts": [{"text": prompt}]}],
+        config=generate_content_config
+    )
 
-    try:
-        chat = model.start_chat(history=[
-            {"role": "user" if m["role"] == "user" else "model", "parts": [m["content"]]} 
-            for m in st.session_state.messages[:-1]
-        ])
-        with st.chat_message("assistant"):
-            response = chat.send_message(prompt)
-            st.markdown(response.text)
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
-    except Exception as e:
-        st.error(f"Có lỗi nhỏ rồi, con chờ chút nhé: {e}")
+    # Hiển thị phản hồi của Cô
+    with st.chat_message("assistant"):
+        st.markdown(response.text)
+    
+    # Lưu vào lịch sử
+    st.session_state.chat_history.append({"role": "user", "content": prompt})
+    st.session_state.chat_history.append({"role": "assistant", "content": response.text})
