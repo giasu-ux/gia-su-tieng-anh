@@ -115,31 +115,6 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0,0,0,0.1)
     }
 
-    .nut-xoa-hoi-thoai {
-    /* Dải màu đỏ pastel dịu nhẹ */
-    background: linear-gradient(135deg, #ffcfcf 0%, #ff9a9a 100%) !important;
-    
-    /* Các thuộc tính bổ trợ để nút trông đẹp hơn */
-    border: none !important;
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    
-    /* Đổ bóng nhẹ để nút có chiều sâu (tránh bị phẳng lì) */
-    box-shadow: 0 4px 15px rgba(255, 154, 154, 0.3) !important;
-
-}
-
-/* Hiệu ứng khi di chuột qua */
-.nut-xoa-hoi-thoai:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(255, 154, 154, 0.4);
-}
-
     /* Khung nhập liệu ở dưới */
     [data-testid="stChatInput"] {
         border-radius: 30px;
