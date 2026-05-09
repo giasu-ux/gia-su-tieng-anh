@@ -55,7 +55,7 @@ st.markdown("""
     
     /* Nút "Bắt đầu thi HK2" màu đỏ hồng */
     div.stButton > button:first-child {
-        background-color: #FF5C5C;
+        background-color: #AEC6CF;
         color: white;
         border: none;
     }
