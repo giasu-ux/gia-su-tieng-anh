@@ -44,7 +44,7 @@ st.markdown("""
         border-radius: 20px;
         max-width: 70%; /* Chỉ dài tối đa 70% màn hình */
         word-wrap: break-word;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         position: relative;
     }
 
