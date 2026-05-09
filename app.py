@@ -24,14 +24,6 @@ st.markdown("""
         text-align: center;
         padding: 20px 0;
     }
-    
-    /* Bong bóng chat */
-    .stChatMessage {
-        border-radius: 20px;
-        padding: 15px;
-        margin-bottom: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
 
     /* Khung chứa tổng thể cho mỗi dòng chat */
     .chat-row {
