@@ -312,7 +312,7 @@ with st.sidebar:
     # PHẦN 1: ÔN TẬP UNIT
     st.write("---")
     st.selectbox(
-    "📘 Practice by Unit",
+    "📘 Ôn tập bài học:",
     ["--- Chọn bài ---"] + [f"Unit {i}" for i in range(1, 21)],
     key="unit_selector",
     on_change=on_sidebar_action # Tên này phải giống hệt tên hàm ở Bước 2
