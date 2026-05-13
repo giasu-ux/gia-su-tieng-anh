@@ -230,7 +230,7 @@ def call_ai_now(user_input):
         with st.spinner("Cô đang suy nghĩ câu trả lời cho con nhé..."):
             try:
                 response = client.models.generate_content(
-                    model="gemini-3.1-flash",
+                    model="gemini-1.5-flash",
                     contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
                     config=config
                 )
@@ -288,7 +288,7 @@ def call_ai_now(user_input):
     st.session_state.messages.append({"role": "user", "content": user_input})
     try:
         response = client.models.generate_content(
-            model="gemini-3.1-flash",
+            model="gemini-1.5-flash",
             contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
             config=config
         )
@@ -379,7 +379,7 @@ if final_prompt:
     with st.spinner("Cô đang chuẩn bị bài cho con, chờ Cô 1 xíu nhé... ✨"):
         try:
             response = client.models.generate_content(
-                model="gemini-3.1-flash",
+                model="gemini-1.5-flash",
                 contents=[{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in st.session_state.messages],
                 config=config
             )
